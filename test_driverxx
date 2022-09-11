@@ -1,0 +1,99 @@
+typedef struct
+{
+	U32 SlowToFastValue;
+	U32 FastToSlowValue;	
+}T_Valve;
+typedef enum
+{
+	VALVE_SLOW,
+	VALVE_FAST
+}T_Valves;
+typedef enum
+{
+	VALVE_OFF,
+	VALVE_ON
+}T_OnOff;
+
+void dVLFInit(void);
+S32 dVLFOnOff (T_Valves valve, T_OnOff onOff);
+#endif /*_DVALVE_H_*/
+
+/*=============================================================================
+$Log: $
+*/
+__________________________________________________________*/
+void dVLFInit(void)
+{
+	dGPIOPinModeAndSel(PIN_VALVE_0);
+	dGPIOPinModeAndSel(PIN_VALVE_1);
+	dGPIOClrPIN(PIN_VALVE_0); // Turn off the valves
+	dGPIOClrPIN(PIN_VALVE_1); // Turn off the valves
+}
+
+/*______________________________________________________________________________
+
+/*____________________________________________________________________________*/
+S32 dVLFOnOff (T_Valves valve, T_OnOff onOff)
+{
+	/*Check the input parameters*/
+	switch(valve)
+	{
+		case VALVE_SLOW:
+			switch(onOff)
+			{
+				case VALVE_ON: dGPIOSetPIN(PIN_VALVE_0); break;
+				case VALVE_OFF: dGPIOClrPIN(PIN_VALVE_0); break;
+			}
+			break;
+		case VALVE_FAST:
+			switch(onOff)
+			{
+				case VALVE_ON: dGPIOSetPIN(PIN_VALVE_1); break;
+				case VALVE_OFF: dGPIOClrPIN(PIN_VALVE_1); break;
+			}
+			
+			break;
+	}
+   	return(SUCCESS);
+}
+typedef enum{
+	motor,
+	fan,
+	greenled,
+	yellowled
+
+}comp_t;
+typedef enum{
+	motor_off,
+	motor_on,
+	fan_off,
+	fan_on,
+	greenled_off,
+	greenled_on,
+	yellowled_off,
+	yellowled_on
+}onOff_t;
+void ComponentsOnOff (comp_t comp, onOff_t onOff){//belli süreler kadar çalışmaları
+	switch(comp){
+		case motor:
+			switch(onOff){
+				case motor_on: break;
+				case motor_off: break;
+			}
+		case fan:
+			switch(onOff){
+				case fan_on: break;
+				case fan_off: break;
+			}
+		case greenled:
+			switch(onOff){
+				case greenled_on: break;
+				case greenled_off: break;
+			}
+		case yellowled:
+			switch(onOff){
+				case yellowled_on: break;
+				case yellowled_off: break;
+			}
+	}
+}
