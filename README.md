@@ -25,3 +25,15 @@ CalculateIntervalTime(100,HAL_GetTick());//100ms hesapla geçince success dönd�
 // şu anki tick değerini gönder ki hesaplayabilsin
 // yukarıdaki olmazsa fonksiyondan önce start_time = HAL_GetTick();
 CalculateIntervalTime(100,start_time);
+
+
+void interval_call(uin32_t counter_ms){
+	if (counter_ms > 0){
+		counter_ms--;
+		if (counter_ms == 0)return interval_state success;
+		
+	}
+}
+bool getinterval_state(){
+	return interval_state;
+}
