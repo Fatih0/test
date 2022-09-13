@@ -1,0 +1,82 @@
+void __start_mode(){
+	/*--------------------------------------
+	device_state = devicestate_normal;
+	fan_state = fanstate_working;
+	counters_struct.counter_fan_workingtime_sec = counterGetsec();
+	---------------------------------------------------------------------*/
+	if (fanGetState()){
+		fan_on;
+		if (counterGetsec() - counters_struct.counter_fan_workingstart_sec == fan_workingtime_sec){
+			fan_state = fanstate_stop;
+			//counters_struct.counter_fan_workingstart_sec = counterGetsec();
+			counters_struct.counter_fan_startsec = counterGetsec();
+			device_state = devicestate_normal;
+		}
+	}
+	else fan_off;
+
+
+}
+void __reset_mode(){
+	// counterlar init
+	// değerler init
+	// ysysy 500ms olarak yanar
+	if (counterGetsec() - counters_struct.counter_resetwaitstart_sec == resetmotor_waittime_sec){
+		counters_struct.counter_motor_30times = 30;
+		motor_state = motorstate_working;
+		counters_struct.counter_motor_workingstart_ms = HAL_GetTick();
+	}
+	if (motorGetState()){
+		motor_on;
+		if (counterGetsec() - counters_struct.counter_motor_workingstart_ms = motor_workingtime_ms){
+			motor_state = motorstate_stop;
+			counters_struct.counter_motor_30times--;
+			counters_struct.counter_motor_startsec = counterGetsec();
+		}
+	}else motor_off;
+	if (counterGetsec() - counters_struct.counter_motor_startsec == resetmotor_releasetime_sec){
+		motor_state = motorstate_working;
+		//counters_struct.counter_motor_startsec = counterGetsec();
+		counters_struct.counter_motor_workingstart_ms = HAL_GetTick();
+	}
+	switch(flag){
+		case 1: greenled_on;
+			if ((HAL_GetTick() - resetled_workingtime_ms > 500) && flag==1){
+				greenled_off;
+				yellowled_on;
+				resetled_workingtime_ms = HAL_GetTick();
+				flag = 2;
+			}break;
+		case 2:
+			if ((HAL_GetTick() - resetled_workingtime_ms > 500)&& flag==2){
+				yellowled_off;
+				greenled_on;
+				resetled_workingtime_ms = HAL_GetTick();
+				flag = 3;
+			}break;
+		case 3:
+			if (HAL_GetTick() - resetled_workingtime_ms > 500){
+				greenled_off;
+				yellowled_on;
+				resetled_workingtime_ms = HAL_GetTick();
+				flag = 4;
+			}break;
+		case 4:
+			if (HAL_GetTick() - resetled_workingtime_ms > 500){
+				yellowled_off;
+				greenled_on;
+				resetled_workingtime_ms = HAL_GetTick();
+				flag=5;
+		}break;
+		case 5:
+			if (HAL_GetTick() - resetled_workingtime_ms > 500){
+				greenled_off;
+				resetled_workingtime_ms = HAL_GetTick();
+				flag=0;
+			}break;
+		//default : device_state = devicestate_normal;
+			//break;
+	}
+
+	if (counters_struct.counter_motor_30times == 0) device_state = devicestate_normal;
+}
